@@ -141,8 +141,124 @@ After many iterations, gradient descent finds values for `m` and `b` that **mini
 Now, this line can be used to **predict** values of `y` for new inputs `x`.
 
 ---
+## **mathematical derivation**
+Let's walk through the **mathematical derivation** of the gradients of the **Mean Squared Error (MSE)** loss function for **simple linear regression** with respect to the parameters:
 
-### Summary
+* $m$: the slope (weight)
+* $b$: the y-intercept (bias)
+
+---
+
+### 🧠 **Model Equation**
+
+$$
+\hat{y}_i = mx_i + b
+$$
+
+Where:
+
+* $x_i$: input feature
+* $y_i$: true label
+* $\hat{y}_i$: predicted output
+
+---
+
+### 🎯 **Loss Function: Mean Squared Error (MSE)**
+
+For $n$ training samples, the MSE is:
+
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2 = \frac{1}{n} \sum_{i=1}^{n} (mx_i + b - y_i)^2
+$$
+
+We want to compute:
+
+* $\frac{\partial \text{MSE}}{\partial m}$
+* $\frac{\partial \text{MSE}}{\partial b}$
+
+---
+
+### 🧮 **Step-by-Step Derivative with Respect to $m$**
+
+Start with:
+
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (mx_i + b - y_i)^2
+$$
+
+Let $e_i = (mx_i + b - y_i)$
+
+Then:
+
+$$
+\frac{\partial \text{MSE}}{\partial m} = \frac{1}{n} \sum_{i=1}^{n} 2 e_i \cdot \frac{\partial e_i}{\partial m}
+$$
+
+Since:
+
+$$
+\frac{\partial e_i}{\partial m} = x_i
+$$
+
+So:
+
+$$
+\frac{\partial \text{MSE}}{\partial m} = \frac{2}{n} \sum_{i=1}^{n} (mx_i + b - y_i) \cdot x_i
+$$
+
+---
+
+### 🧮 **Step-by-Step Derivative with Respect to $b$**
+
+Similarly:
+
+$$
+\frac{\partial \text{MSE}}{\partial b} = \frac{1}{n} \sum_{i=1}^{n} 2 e_i \cdot \frac{\partial e_i}{\partial b}
+$$
+
+Since:
+
+$$
+\frac{\partial e_i}{\partial b} = 1
+$$
+
+So:
+
+$$
+\frac{\partial \text{MSE}}{\partial b} = \frac{2}{n} \sum_{i=1}^{n} (mx_i + b - y_i)
+$$
+
+---
+
+### ✨ Final Gradient Formulas
+
+$$
+\boxed{
+\frac{\partial \text{MSE}}{\partial m} = \frac{2}{n} \sum_{i=1}^{n} (mx_i + b - y_i) \cdot x_i
+}
+$$
+
+$$
+\boxed{
+\frac{\partial \text{MSE}}{\partial b} = \frac{2}{n} \sum_{i=1}^{n} (mx_i + b - y_i)
+}
+$$
+
+These derivatives are used in **gradient descent** to update $m$ and $b$:
+
+$$
+m := m - \alpha \cdot \frac{\partial \text{MSE}}{\partial m}
+$$
+
+$$
+b := b - \alpha \cdot \frac{\partial \text{MSE}}{\partial b}
+$$
+
+Where $\alpha$ is the **learning rate**.
+
+---
+
+## Summary
 
 | Concept             | Intuition                                                                |
 | ------------------- | ------------------------------------------------------------------------ |
