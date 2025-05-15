@@ -195,3 +195,78 @@ $$
 * If $\hat{y} \geq 0.5$, predict class 1
 * Else, predict class 0
 
+---
+## Why is Linear Cost Function not effective in Logistic Regression?
+
+The **linear cost function (like Mean Squared Error)** is not effective in **logistic regression** for **classification tasks**, primarily due to how it interacts with the **sigmoid function**, **gradient descent optimization**, and the **minimization landscape (local vs. global minima)**. Here's a clear explanation with respect to these points:
+
+---
+
+### 🔹 1. **Logistic Regression Overview**
+
+Logistic regression predicts probabilities for classification using the **sigmoid function**:
+
+$$
+\hat{y} = \sigma(z) = \frac{1}{1 + e^{-z}} \quad \text{where } z = w^T x + b
+$$
+
+This maps any input $z$ to the range $(0, 1)$, suitable for binary classification.
+
+---
+
+### 🔹 2. **Linear Cost Function (MSE) and Its Problems**
+
+If we wrongly use **Mean Squared Error (MSE)** as the cost function:
+
+$$
+J(w) = \frac{1}{m} \sum_{i=1}^m (\hat{y}^{(i)} - y^{(i)})^2
+$$
+
+This is a **quadratic loss**. While it works fine for **linear regression**, it creates problems in **logistic regression**:
+
+#### 🔸 a. **Non-Convex Loss Surface**
+
+* The MSE applied to a sigmoid output results in a **non-convex cost function**.
+* The interaction between the **non-linear sigmoid function** and the quadratic error makes the cost surface **non-convex**, especially for extreme values of $z$.
+* This introduces the risk of **multiple local minima**, which makes gradient descent optimization **unstable or slow**.
+
+#### 🔸 b. **Gradient Issues**
+
+* MSE does not produce smooth gradients when used with the sigmoid. When $\hat{y}$ is close to 0 or 1 (saturated regions of the sigmoid), the gradients become **very small** (vanishing gradients).
+* This slows down learning and causes inefficient updates.
+
+---
+
+### 🔹 3. **Log-Loss (Cross Entropy) — The Right Choice**
+
+Instead, logistic regression uses the **log loss** or **cross-entropy loss**:
+
+$$
+J(w) = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right]
+$$
+
+#### ✅ Advantages:
+
+* **Convex surface**: For binary logistic regression, this loss is **convex**, meaning **only one global minimum**.
+* **Better gradients**: Cross-entropy has steeper gradients when predictions are far from the correct label, enabling faster and more effective learning.
+* **Matches likelihood**: Cross-entropy loss is derived from the **likelihood function**, making it statistically sound for classification tasks.
+
+---
+
+### 🔹 4. **Gradient Descent and Minima Landscape**
+
+| Aspect                        | Using MSE (Linear Cost)                        | Using Cross-Entropy (Log Loss)                       |
+| ----------------------------- | ---------------------------------------------- | ---------------------------------------------------- |
+| **Minima**                    | May have **local minima** due to non-convexity | Only **global minimum** (convex)                     |
+| **Gradient Descent**          | Slower, may **get stuck** or oscillate         | Stable, **guarantees convergence** to global minimum |
+| **Optimization Landscape**    | Irregular surface, sensitive to initialization | Smooth convex bowl-like surface                      |
+| **Theoretical Justification** | Poor (not matching Bernoulli distribution)     | Strong (MLE for Bernoulli)                           |
+
+---
+
+### 🔹 Summary
+
+> **Using a linear (MSE) cost function in logistic regression leads to a non-convex optimization landscape with poor gradient behavior, making gradient descent unreliable and slow. In contrast, cross-entropy loss ensures convexity, proper gradient flow, and convergence to a global minimum, making it ideal for classification.**
+
+
+
